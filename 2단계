@@ -7,14 +7,26 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         int lastId = 0;
-        WiseSaying[] wiseSayings = new WiseSaying[100];
-
 
         while(true) {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
             if (cmd.equals("종료")) break;
+
+            if(cmd.equals("등록")) {
+                System.out.print("명언 : ");
+                String content = sc.nextLine();
+
+                System.out.print("작가 : ");
+                String author = sc.nextLine();
+
+                int id = ++lastId;
+
+                System.out.println(id + "번 명연이 등록되었습니다.");
+            }
+
+            
         }
   }        
 }
