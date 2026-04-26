@@ -1,4 +1,4 @@
-package com.back;
+package com.back.src.main.java.com.back;
 
 public class WiseSaying {
     int id;
