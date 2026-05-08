@@ -22,6 +22,8 @@ public class App {
 
             if(cmd.equals("등록")) actionWrite();
 
+            if(cmd.startsWith("삭제")) actionDelete(cmd);
+            
         }
         sc.close();
     }
@@ -50,6 +52,27 @@ public class App {
         System.out.println(wiseSaying.id + "번 명연이 등록되었습니다.");
     }
 
+    void actionDelete(String cmd) {
+        String[] cmdBits = cmd.split("=", 2);
+
+        if(cmdBits.length > 2 || cmdBits[1].isEmpty()) {
+            System.out.println("id를 입력해주세요");
+            return;
+        }
+
+        // 존재 여부 찾기
+        int id = Integer.parseInt(cmdBits[1]);
+        int deleteIndex = delete(id); // delete에서 id값을 받고 그 id에 해당하는 걸 삭제
+        if(deleteIndex == -1) {
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
+            return;
+        }
+
+        System.out.println(id + "번 명언이 삭제되었습니다.");
+    }
+
+
+
     // 내부 로직
     int getSize() {
         return wiseSayingsLastIndex + 1;
@@ -67,7 +90,6 @@ public class App {
         return forListWiseSayings;
     }
 
-
     WiseSaying write(String content, String author) {
         WiseSaying wiseSaying = new WiseSaying();
         wiseSaying.id = ++lastId;
@@ -78,6 +100,24 @@ public class App {
         return wiseSaying;
     }
 
+    int delete(int id) {
+        int deleteIndex = -1;
 
+        for(int i = 0; i <= wiseSayingsLastIndex; i++) {
+            if(wiseSayings[i].id == id) {
+                deleteIndex = i;
+                break;
+            }
+        }
+
+        if(deleteIndex == -1) return deleteIndex;
+
+        for(int i = deleteIndex - 1; i <= wiseSayingsLastIndex; i++) {
+            wiseSayings[i - 1] = wiseSayings[i];
+        }
+        wiseSayings[++wiseSayingsLastIndex] = null;
+        wiseSayingsLastIndex--;
+        return deleteIndex;
+    }
 
 }
