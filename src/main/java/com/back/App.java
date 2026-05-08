@@ -23,7 +23,9 @@ public class App {
             if(cmd.equals("등록")) actionWrite();
 
             if(cmd.startsWith("삭제")) actionDelete(cmd);
-            
+
+            if(cmd.startsWith("수정")) actionModify(cmd);
+
         }
         sc.close();
     }
@@ -55,7 +57,7 @@ public class App {
     void actionDelete(String cmd) {
         String[] cmdBits = cmd.split("=", 2);
 
-        if(cmdBits.length > 2 || cmdBits[1].isEmpty()) {
+        if(cmdBits.length < 2 || cmdBits[1].isEmpty()) {
             System.out.println("id를 입력해주세요");
             return;
         }
@@ -67,8 +69,37 @@ public class App {
             System.out.println(id + "번 명언은 존재하지 않습니다.");
             return;
         }
-
         System.out.println(id + "번 명언이 삭제되었습니다.");
+    }
+
+    void actionModify(String cmd) {
+        String[] cmdBits = cmd.split("=", 2);
+
+        if(cmdBits.length < 2 || cmdBits[1].isEmpty()) {
+            System.out.println("id를 입력해주세요");
+            return;
+        }
+
+        int id = Integer.parseInt(cmdBits[1]);
+
+        WiseSaying wiseSaying = findById(id);
+
+        if(wiseSaying == null) {
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
+            return;
+        }
+
+        System.out.printf("명언(기존) : %s\n", wiseSaying.content);
+        System.out.print("명언 : ");
+        String content = sc.nextLine();
+
+        System.out.printf("작가(기존) : %s\n", wiseSaying.author);
+        System.out.print("작가 : ");
+        String author = sc.nextLine();
+
+        modify(wiseSaying, content, author);
+
+        System.out.println(id + "번 명언이 수정되었습니다.");
     }
 
 
@@ -89,6 +120,22 @@ public class App {
 
         return forListWiseSayings;
     }
+
+    WiseSaying findById(int id) {
+        int index = findIndexById(id);
+        if(index == -1) return null;
+        return wiseSayings[index];
+    }
+
+    int findIndexById(int id) {
+        for(int i = 0; i <= wiseSayingsLastIndex; i++) {
+            if(wiseSayings[i].id == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 
     WiseSaying write(String content, String author) {
         WiseSaying wiseSaying = new WiseSaying();
@@ -112,12 +159,17 @@ public class App {
 
         if(deleteIndex == -1) return deleteIndex;
 
-        for(int i = deleteIndex - 1; i <= wiseSayingsLastIndex; i++) {
+        for(int i = deleteIndex + 1; i <= wiseSayingsLastIndex; i++) {
             wiseSayings[i - 1] = wiseSayings[i];
         }
         wiseSayings[++wiseSayingsLastIndex] = null;
         wiseSayingsLastIndex--;
         return deleteIndex;
+    }
+
+    void modify(WiseSaying wiseSaying, String content, String author) {
+        wiseSaying.content = content;
+        wiseSaying.author = author;
     }
 
 }
